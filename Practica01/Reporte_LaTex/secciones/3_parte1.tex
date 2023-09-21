@@ -1,0 +1,192 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Parte 1: Descripción del Proyecto} % NOMBRE DE LA SECCIÓN
+\label{sec:parte1} % ETIQUETA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Eres el computólogo a cargo en un equipo multidisciplinario donde tus colegas son biólogos, matemáticos y terrólogos. Resulta que tu grupo se dedica a investigar la vida que hay en ambientes extremos. Esta vez, lograron extraer muestras provenientes de ventilas hidrotermales. Los biólogos se hicieron cargo de su trabajo y te otorgaron esta carpeta con cuatro archivos FASTA.
+
+\subsection*{Análisis de Búsqueda de Genes}
+
+Para realizar el análisis de búsqueda de genes en los archivos de secuencia, utilizamos una combinación de scripts de Bash y comandos de línea de comandos, incluyendo \texttt{grep} y \texttt{sed}. Para contar el número de genes (o encabezados de secuencia) presentes en cada archivo, utilizamos el comando \texttt{grep} con la opción \texttt{-c} para contar las líneas que comienzan con el carácter \texttt{>} (que denota el inicio de una nueva secuencia).
+
+\begin{verbatim}
+grep -c "^>" *.fasta
+  fragment_1.fna:1
+  fragment_2.fna:1
+  fragment_3.fna:1
+  fragment_4.fna:1
+\end{verbatim}
+
+\subsection*{Cálculo de la longitud de las secuencias}
+
+Para calcular la longitud de las secuencias en un archivo FASTA, podemos utilizar el comando \texttt{awk}. 
+
+\begin{verbatim}
+awk '{if($0 !~ />/) print length($0)}' 
+file_name.fna
+\end{verbatim}
+
+\subsection*{Análisis de Codones de Inicio y Parada}
+
+Para llevar a cabo un análisis inicial y localizar los codones de inicio y parada en las secuencias, podemos utilizar el comando \texttt{grep}. A continuación, presentamos una guía sobre cómo usar este comando para identificar líneas que contienen los codones de inicio ("ATG") y los codones de parada ("TAA", "TAG", "TGA") en un archivo FASTA:
+
+\subsubsection*{Identificación de Codones de Inicio y Parada}
+
+\begin{itemize}
+\item Codón de Inicio - \textbf{"ATG"}  
+\begin{verbatim}
+grep -n 'ATG' file_name.fna
+\end{verbatim}
+
+\item Codón de Parada - \textbf{"TAA"}  
+\begin{verbatim}
+grep -n 'ATG' file_name.fna
+\end{verbatim}
+
+\item Codón de Parada - "TAG"  
+\begin{verbatim}
+grep -n 'TAG' file_name.fna
+\end{verbatim}
+
+\item Codón de Parada - "TGA"  
+\begin{verbatim}
+grep -n 'TGA' file_name.fna
+\end{verbatim}
+\end{itemize}
+
+\subsubsection*{Identificación de Posibles Genes (ORFs)}
+
+\begin{verbatim}
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T
+(?:AA|AG|GA)' file_name.fna | wc -l
+\end{verbatim}
+
+\textbf{Explicación del Comando}:
+
+\texttt{grep}: Una herramienta para buscar cadenas específicas en archivos.
+\begin{itemize}
+\item \texttt{-o}: Opción que permite imprimir solo las partes de la línea que coinciden con el patrón.
+\item \texttt{-P}: Opción que permite interpretar la expresión como una expresión regular de Perl.
+\item \texttt{'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)'}: Es una expresión regular que busca una cadena.
+\item \texttt{file\_name.fna}: Es el archivo donde se está realizando la búsqueda.
+\item \texttt{|}: Es un operador de tubería.
+\item \texttt{wc -l}: Cuenta el número de líneas en la entrada.
+\end{itemize}
+
+\subsection*{Utilizando BioPython para la Identificación de ORFs}
+
+En este proyecto, también nos apoyaremos en la biblioteca BioPython, una herramienta poderosa y flexible para el análisis computacional de secuencias biológicas. La biblioteca BioPython facilita la escritura de scripts de Python para trabajar con datos biológicos.
+
+\subsection*{Instalación de BioPython}
+
+\begin{verbatim}
+pip install biopython
+\end{verbatim}
+
+\subsection*{Lectura de Archivos FASTA}
+
+Utilizaremos BioPython para leer los archivos FASTA y extraer las secuencias que contienen.
+
+\subsection*{Identificación de ORFs}
+
+Posteriormente, escribiremos scripts para identificar ORFs en las secuencias extraídas. Esto implica buscar secuencias que comienzan con el codón de inicio "ATG" y terminan con un codón de parada ("TAA", "TAG" o "TGA"), con una longitud mínima especificada para considerarse un ORF válido.
+
+
+\section*{Código en Python}
+
+Este script de Python utiliza la biblioteca BioPython para analizar archivos en formato FASTA. Identifica y traduce los marcos de lectura abiertos (ORFs) en las secuencias nucleotídicas presentes en el archivo. Los ORFs se definen como secuencias que comienzan con el codón "ATG" y terminan con uno de los codones de parada ("TAA", "TAG" o "TGA"), con una longitud mínima de 90 nucleótidos (30 tripletes). El script también ofrece detalles sobre la longitud de cada secuencia y el número de ORFs identificados.
+
+\begin{lstlisting}[language=Python]
+from Bio import SeqIO
+from Bio.Seq import Seq
+
+def read_fasta(file_path):
+    sequences = {}
+    for record in SeqIO.parse(file_path, "fasta"):
+        sequences[record.id] = str(record.seq)
+    return sequences
+
+def find_orfs(sequence, min_length=100):
+    orfs = []
+    sequence_length = len(sequence)
+    for i in range(sequence_length):
+        if sequence[i:i + 3] == 'ATG':
+            for j in range(i, sequence_length, 3):
+                if sequence[j:j + 3] in {'TAA', 'TAG', 'TGA'}:
+                    if j + 3 - i >= min_length:
+                        orfs.append(sequence[i:j + 3])
+                    break
+    return orfs
+
+def translate_orf(orf):
+    return Seq(orf).translate(to_stop=True)
+
+file_path = "./fasta/fragment_1.fna"
+sequences = read_fasta(file_path)
+
+for seq_id, seq in sequences.items():
+    print(f"ID de la Secuencia: {seq_id}, Longitud: {len(seq)}")
+
+orfs_in_sequences = {}
+for seq_id, seq in sequences.items():
+    orfs_in_sequences[seq_id] = find_orfs(seq)
+
+for seq_id, orfs in orfs_in_sequences.items():
+    print(f"ID de la Secuencia: {seq_id}, Número de ORFs: {len(orfs)}")
+    translated_orfs = [translate_orf(orf) for orf in orfs]
+\end{lstlisting}
+
+\section*{Resultados (Parte 1)}
+
+\subsection*{Análisis de Fragmentos de Secuencia}
+
+\subsubsection*{Archivo Fragmento 1:}
+\begin{itemize}
+\item Número de registros (posibles genes): 1
+\item Detalles del registro:
+  \begin{itemize}
+  \item ID: Fragmento1
+  \item Longitud de la secuencia: 632,428 bases
+  \item Número de ORFs identificados: 3,611
+  \end{itemize}
+\end{itemize}
+
+\subsubsection*{Archivo Fragmento 2:}
+\begin{itemize}
+\item Número de registros (posibles genes): 1
+\item Detalles del registro:
+  \begin{itemize}
+  \item ID: Fragmento2
+  \item Longitud de la secuencia: 100,531 bases
+  \item Número de ORFs identificados: 527
+  \end{itemize}
+\end{itemize}
+
+\subsubsection*{Archivo Fragmento 3:}
+\begin{itemize}
+\item Número de registros (posibles genes): 1
+\item Detalles del registro:
+  \begin{itemize}
+  \item ID: Fragmento3
+  \item Longitud de la secuencia: 1,154,456 bases
+  \item Número de ORFs identificados: 5,741
+  \end{itemize}
+\end{itemize}
+
+\subsubsection*{Archivo Fragmento 3:}
+\begin{itemize}
+\item Número de registros (posibles genes): 1
+\item Detalles del registro:
+  \begin{itemize}
+  \item ID: Fragmento4
+  \item Longitud de la secuencia:7,115,445 bases
+  \item Número de ORFs identificados: 35,429
+  \end{itemize}
+\end{itemize}
+
+\subsection*{Observaciones:}
+\begin{itemize}
+\item \textbf{Fragmento 1:} Aunque su tamaño sugiere que podría ser un genoma bacteriano, el número de ORFs identificados (3,611) es típico para muchas bacterias. Esto refuerza la idea de que este fragmento puede ser un genoma bacteriano completo.
+\item \textbf{Fragmento 2:} A pesar de su menor tamaño, el número de ORFs (527) es notable. Aunque no es suficiente para ser un genoma bacteriano completo, podría representar un plásmido o un genoma viral.
+\item \textbf{Fragmento 3:} Con 5,741 ORFs, este fragmento tiene una diversidad genética considerable. Esto, junto con su longitud, sugiere que es muy probable que sea un genoma bacteriano completo.
+\item \textbf{Fragmento 4:} La enorme cantidad de ORFs (35,429) refuerza la idea de que este fragmento pertenece a un organismo eucariota, como un hongo o incluso un protista.
+\end{itemize}

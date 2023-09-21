@@ -1,0 +1,48 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Parte 2: Identificación y Extracción de un Gen Clave en Ambientes Extremos} 
+\label{sec:parte2} % ETIQUETA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Tus colegas descubren que el primer gen del fragmento de DNA más corto, podría ser importante para los organismos que viven en ventilas hidrotermales.
+
+\subsection*{Código Python (GenTranslator)}
+
+El programa \texttt{Gen Translator} se diseñó para analizar y procesar genes de interés en secuencias de DNA. A partir de un archivo \texttt{.fasta} con una secuencia genética, el programa realiza las siguientes tareas:
+
+\begin{itemize}
+    \item \textbf{Generación del cDNA}: Calcula la secuencia complementaria de DNA a partir de la secuencia de entrada y la guarda en un archivo \texttt{cDNA.fasta}.
+    \item \textbf{Transcripción a ARNm}: Convierte la secuencia de DNA en su correspondiente ARN mensajero, eliminando timinas y reemplazándolas por uracilos. El resultado se almacena en \texttt{mRNA.fasta}.
+    \item \textbf{Traducción a Aminoácidos}: Traduce el ARN mensajero en una cadena de aminoácidos utilizando el código genético, generando una secuencia proteica. Esta secuencia se guarda en \texttt{aminoacidos.fasta}.
+\end{itemize}
+
+\subsection*{Resultado (Parte 2)}
+
+A partir de la información genómica y proteómica obtenida y con base en los archivos generados (\texttt{cDNA.fasta}, \texttt{mRNA.fasta}, \texttt{aminoacidos.fasta}), hemos deducido que el organismo en estudio es eucarionte. A continuación, se detallan las razones principales:
+
+\subsubsection*{Gen Relacionado con la Formación del Núcleo Celular}
+
+Se identificó un gen que está asociado con la formación o función del núcleo celular. Es esencial destacar que solo las células eucariontes poseen un núcleo celular bien definido. La presencia de este gen es una fuerte evidencia de la naturaleza eucariota del organismo.
+
+\subsubsection*{cDNA y su Relevancia en Eucariontes}
+
+El archivo \texttt{cDNA.fasta} representa el ADN complementario formado a partir del ARNm. En eucariontes, el cDNA es crucial para estudiar la expresión génica, ya que refleja exclusivamente los genes expresados, excluyendo las regiones intrónicas. Los procariotas carecen de intrones, por lo que la importancia del cDNA en este contexto sugiere un origen eucarionte.
+
+\paragraph{Genes en el ADN: Exones e Intrones}
+
+Los genes en el ADN están compuestos por dos tipos principales de secuencias: exones e intrones.
+
+\paragraph{Exones}
+
+Son las secuencias de ADN que se transcriben y traducen en proteínas. Es decir, tienen la información codificada que se utilizará para producir una proteína específica.
+
+\paragraph{Intrones}
+
+Son las secuencias de ADN que se encuentran entre los exones, pero no se traducen en proteínas. Durante el proceso de formación del ARN mensajero (ARNm) en eucariotas, los intrones se transcriben inicialmente, pero luego son eliminados en un proceso llamado "empalme" o "splicing", dejando solo los exones en el ARNm maduro.
+
+\subsubsection*{Características del ARN Mensajero}
+
+El archivo \texttt{mRNA.fasta} contiene secuencias de ARNm. En eucariontes, este ARNm pasa por un proceso de maduración que incluye adiciones específicas y el empalme para eliminar intrones. Estas características, si se detectan en el archivo, indican un proceso típico de maduración del ARNm eucarionte.
+
+\subsubsection*{Análisis Proteómico}
+
+El archivo \texttt{aminoacidos.fasta} presenta las proteínas traducidas a partir del ARNm. Un análisis posterior de estas secuencias reveló funciones específicas asociadas a eucariontes.
