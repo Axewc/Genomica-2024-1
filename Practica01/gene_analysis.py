@@ -1,6 +1,10 @@
 from Bio import SeqIO
 from Bio.Seq import Seq
-
+"""
+    Casas Espinosa, Axel
+    Jimenez Reyes, Abraham}; 318230577
+    Villarreal Maldonado, Jorge Manuel; 307312637
+"""
 # Leer un archivo FASTA y devolver un diccionario con IDs de secuencia y sus respectivas secuencias.
 def read_fasta(file_path):
     sequences = {}

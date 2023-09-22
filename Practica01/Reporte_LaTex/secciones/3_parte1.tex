@@ -36,10 +36,14 @@ file_name.fna
 
 Hay que recordar que tenemos que tener los archivos .fna en la carpeta donde nos ubiquemos. Recordemos que colocamos una linea y presionamos enter, nos tiene que dar un numero diferente por cada archivo que es la longitud de la secuencia.
 \begin{verbatim}
-awk '{if($0 !~ />/) print length($0)}' fragment_1.fna
-awk '{if($0 !~ />/) print length($0)}' fragment_2.fna
-awk '{if($0 !~ />/) print length($0)}' fragment_3.fna
-awk '{if($0 !~ />/) print length($0)}' fragment_4.fna
+awk '{if($0 !~ />/) print length($0)}'
+fragment_1.fna
+awk '{if($0 !~ />/) print length($0)}' 
+fragment_2.fna
+awk '{if($0 !~ />/) print length($0)}' 
+fragment_3.fna
+awk '{if($0 !~ />/) print length($0)}'
+fragment_4.fna
 \end{verbatim}
 
 \subsection*{Análisis de Codones de Inicio y Parada}
@@ -88,19 +92,29 @@ grep -o -P 'ATG(?:[ATGC]{3}){30,}?T
 \item \texttt{|}: Es un operador de tubería.
 \item \texttt{wc -l}: Cuenta el número de líneas en la entrada.
 \end{itemize}
+
 Escribimos cada linea en terminal para ver el numero de posibles genes en cada archivo .fna.
 \begin{verbatim}
-grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_1.fna | wc -l
-grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_2.fna | wc -l
-grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_3.fna | wc -l
-grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_4.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)'
+fragmnet_1.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' 
+fragmnet_2.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' 
+fragmnet_3.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' 
+fragmnet_4.fna | wc -l
 \end{verbatim}
+
 Los respectivos resultados de cada archivo .fna.
 \begin{verbatim}
-Para nuestro archivo fragment_! encontramos 1309 genes.
-Para nuestro archivo fragment_2 encontramos 208 genes.
-Para nuestro archivo fragment_3 encontramos 1846 genes.
-Para nuestro archivo fragment_4 encontramos 11 428 genes.
+Para nuestro archivo fragment_! 
+encontramos 1309 genes.
+Para nuestro archivo fragment_2 
+encontramos 208 genes.
+Para nuestro archivo fragment_3 
+encontramos 1846 genes.
+Para nuestro archivo fragment_4 
+encontramos 11 428 genes.
 \end{verbatim}
 
 \subsection*{Utilizando BioPython para la Identificación de ORFs}
@@ -125,8 +139,17 @@ Posteriormente, escribiremos scripts para identificar ORFs en las secuencias ext
 \section*{Código en Python}
 
 Este script de Python utiliza la biblioteca BioPython para analizar archivos en formato FASTA. Identifica y traduce los marcos de lectura abiertos (ORFs) en las secuencias nucleotídicas presentes en el archivo. Los ORFs se definen como secuencias que comienzan con el codón "ATG" y terminan con uno de los codones de parada ("TAA", "TAG" o "TGA"), con una longitud mínima de 90 nucleótidos (30 tripletes). El script también ofrece detalles sobre la longitud de cada secuencia y el número de ORFs identificados.
-El codigo lo ejecutaremos de la siguiente manera, abriremos nuestra terminal y nos posicionaremos en la carpeta que tenga nuestro codigo.Escribiremos en nuestra terminal la siguiente linea sin comillas $"python3 gene_analysis.py"$
-En nuesto codigo tenemos algo llamado $file_path$ que es la direccion de nuestros archivos .fna. Tenedremos que colocar la direccion de nuestros archivos que estan en la carpeta llamada VentilasHidrotermales. Si surge algun error basta con mover cada archivo .fna a la altura de nuestro codigo (omitir la carpeta VentilasHidrotermales) y en el $file_path$ colocaremos solo el nombre del archivo por ejemplo $file_path = "fragment_1.fna"$ es en la linea 26 de nuestro codigo y cambiamos el numero para cada archivo. Enseguida se muestran los resultados.
+El codigo lo ejecutaremos de la siguiente manera, abriremos nuestra terminal y nos posicionaremos en la carpeta que tenga nuestro codigo.Escribiremos en nuestra terminal la siguiente linea sin comillas
+
+\begin{verbatim}
+p1_NewGen.py
+\end{verbatim}
+
+En nuesto codigo tenemos algo llamado file\_path que es la direccion de nuestros archivos .fna. Tenedremos que colocar la direccion de nuestros archivos que estan en la carpeta llamada VentilasHidrotermales. Si surge algun error basta con mover cada archivo .fna a la altura de nuestro codigo (omitir la carpeta VentilasHidrotermales) y en el file path colocaremos solo el nombre del archivo por ejemplo
+ \begin{verbatim}
+file_path = fragment_1.fna
+\end{verbatim} 
+es en la linea 30 de nuestro codigo y cambiamos el numero para cada archivo. Enseguida se muestran los resultados.
 
 
 \begin{lstlisting}[language=Python]

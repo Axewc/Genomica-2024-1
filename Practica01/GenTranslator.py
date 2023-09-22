@@ -1,3 +1,8 @@
+"""
+    Casas Espinosa, Axel
+    Jimenez Reyes, Abraham}; 318230577
+    Villarreal Maldonado, Jorge Manuel; 307312637
+"""
 codones_traduccion = { # Alanina
     "GCU":"A", "GCC":"A", "GCA":"A", "GCG":"A",
     # Cisteina
