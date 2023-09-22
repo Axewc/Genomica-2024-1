@@ -75,7 +75,7 @@ grep -n 'ATG' file_name.fna
 Para identificar todas las líneas que contienen el codón de parada "TAA", utiliza el siguiente comando:
 
 ```bash
-grep -n 'ATG' file_name.fna
+grep -n 'TAA' file_name.fna
 ```
 * Codón de Parada - "TAG"  
 Para identificar todas las líneas que contienen el codón de parada "TAG", utiliza el siguiente comando:
