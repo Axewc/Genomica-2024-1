@@ -7,6 +7,9 @@ Tus colegas descubren que el primer gen del fragmento de DNA más corto, podría
 
 \subsection*{Código Python (GenTranslator)}
 
+Para compilar este codigo necesitaremos que nuestro archivo GenTranslator.py este en la misma carpeta que nuestros archivos .fna ya que para ejecutarlo con exito necesitamos escribir en la linea 68 lo siguiente seq = read_first_sequence_from_fasta("fragment_4.fna"). Esto por que nos generara 3 archivos .fasta, el nombre es el mismo para cada archivo .fna entonces si queremos los 3 archivos para el fragment_1 los tenemos que copiar o guardar ya que al cambiar al fragment_2 genera los mismos 3 archivos pero es la informacion de este archivo .fna.
+Teniendo en cuenta lo anterior, abriremos nuestra terminal y escribiremos "python3 GenTranslator.py" damos enter y verificamos en nuestra carpeta que se crearon los 3 archivos.
+
 El programa \texttt{Gen Translator} se diseñó para analizar y procesar genes de interés en secuencias de DNA. A partir de un archivo \texttt{.fasta} con una secuencia genética, el programa realiza las siguientes tareas:
 
 \begin{itemize}

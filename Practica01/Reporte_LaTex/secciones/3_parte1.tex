@@ -7,6 +7,7 @@ Eres el computólogo a cargo en un equipo multidisciplinario donde tus colegas s
 \subsection*{Análisis de Búsqueda de Genes}
 
 Para realizar el análisis de búsqueda de genes en los archivos de secuencia, utilizamos una combinación de scripts de Bash y comandos de línea de comandos, incluyendo \texttt{grep} y \texttt{sed}. Para contar el número de genes (o encabezados de secuencia) presentes en cada archivo, utilizamos el comando \texttt{grep} con la opción \texttt{-c} para contar las líneas que comienzan con el carácter \texttt{>} (que denota el inicio de una nueva secuencia).
+Hay que tener en cuenta que esto se ejecuta en terminal, nosotros lo hicimos con Linux y tenemos la carpeta VentilasHidrotermales con nuestros 4 archivos .fna.  
 
 \begin{verbatim}
 grep -c "^>" *.fasta
@@ -14,6 +15,14 @@ grep -c "^>" *.fasta
   fragment_2.fna:1
   fragment_3.fna:1
   fragment_4.fna:1
+\end{verbatim}
+Tambien lo podemos ejecutar de forma individual teniendo en cuenta que debemos ubicarnos a la altura de nuestros archivos .fna, esto quiere decir abrir nuestra terminal en la carpeta que tiene los archivos y escribir las siguientes lineas en la terminal. 
+
+\begin{verbatim}
+grep -c ">" fragment_1.fna
+grep -c ">" fragment_2.fna
+grep -c ">" fragment_3.fna
+grep -c ">" fragment_4.fna
 \end{verbatim}
 
 \subsection*{Cálculo de la longitud de las secuencias}
@@ -23,6 +32,14 @@ Para calcular la longitud de las secuencias en un archivo FASTA, podemos utiliza
 \begin{verbatim}
 awk '{if($0 !~ />/) print length($0)}' 
 file_name.fna
+\end{verbatim}
+
+Hay que recordar que tenemos que tener los archivos .fna en la carpeta donde nos ubiquemos. Recordemos que colocamos una linea y presionamos enter, nos tiene que dar un numero diferente por cada archivo que es la longitud de la secuencia.
+\begin{verbatim}
+awk '{if($0 !~ />/) print length($0)}' fragment_1.fna
+awk '{if($0 !~ />/) print length($0)}' fragment_2.fna
+awk '{if($0 !~ />/) print length($0)}' fragment_3.fna
+awk '{if($0 !~ />/) print length($0)}' fragment_4.fna
 \end{verbatim}
 
 \subsection*{Análisis de Codones de Inicio y Parada}
@@ -39,7 +56,7 @@ grep -n 'ATG' file_name.fna
 
 \item Codón de Parada - \textbf{"TAA"}  
 \begin{verbatim}
-grep -n 'ATG' file_name.fna
+grep -n 'TAA' file_name.fna
 \end{verbatim}
 
 \item Codón de Parada - "TAG"  
@@ -71,6 +88,20 @@ grep -o -P 'ATG(?:[ATGC]{3}){30,}?T
 \item \texttt{|}: Es un operador de tubería.
 \item \texttt{wc -l}: Cuenta el número de líneas en la entrada.
 \end{itemize}
+Escribimos cada linea en terminal para ver el numero de posibles genes en cada archivo .fna.
+\begin{verbatim}
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_1.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_2.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_3.fna | wc -l
+grep -o -P 'ATG(?:[ATGC]{3}){30,}?T(?:AA|AG|GA)' fragmnet_4.fna | wc -l
+\end{verbatim}
+Los respectivos resultados de cada archivo .fna.
+\begin{verbatim}
+Para nuestro archivo fragment_! encontramos 1309 genes.
+Para nuestro archivo fragment_2 encontramos 208 genes.
+Para nuestro archivo fragment_3 encontramos 1846 genes.
+Para nuestro archivo fragment_4 encontramos 11 428 genes.
+\end{verbatim}
 
 \subsection*{Utilizando BioPython para la Identificación de ORFs}
 
@@ -94,6 +125,9 @@ Posteriormente, escribiremos scripts para identificar ORFs en las secuencias ext
 \section*{Código en Python}
 
 Este script de Python utiliza la biblioteca BioPython para analizar archivos en formato FASTA. Identifica y traduce los marcos de lectura abiertos (ORFs) en las secuencias nucleotídicas presentes en el archivo. Los ORFs se definen como secuencias que comienzan con el codón "ATG" y terminan con uno de los codones de parada ("TAA", "TAG" o "TGA"), con una longitud mínima de 90 nucleótidos (30 tripletes). El script también ofrece detalles sobre la longitud de cada secuencia y el número de ORFs identificados.
+El codigo lo ejecutaremos de la siguiente manera, abriremos nuestra terminal y nos posicionaremos en la carpeta que tenga nuestro codigo.Escribiremos en nuestra terminal la siguiente linea sin comillas $"python3 gene_analysis.py"$
+En nuesto codigo tenemos algo llamado $file_path$ que es la direccion de nuestros archivos .fna. Tenedremos que colocar la direccion de nuestros archivos que estan en la carpeta llamada VentilasHidrotermales. Si surge algun error basta con mover cada archivo .fna a la altura de nuestro codigo (omitir la carpeta VentilasHidrotermales) y en el $file_path$ colocaremos solo el nombre del archivo por ejemplo $file_path = "fragment_1.fna"$ es en la linea 26 de nuestro codigo y cambiamos el numero para cada archivo. Enseguida se muestran los resultados.
+
 
 \begin{lstlisting}[language=Python]
 from Bio import SeqIO
